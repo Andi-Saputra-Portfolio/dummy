@@ -8,20 +8,25 @@ from streamlit_autorefresh import st_autorefresh
 # ============================================================
 # KONFIGURASI DATABASE (otomatis deteksi mode)
 # ============================================================
+import streamlit as st
+import pandas as pd
+from sqlalchemy import create_engine
+import plotly.express as px
+from io import BytesIO
+from streamlit_autorefresh import st_autorefresh
+
+# ============================================================
+# KONFIGURASI DATABASE (gunakan secrets.toml)
+# ============================================================
 try:
-    # Mode Streamlit Cloud → pakai secrets.toml
     DB_USER = st.secrets["DB_USER"]
     DB_PASS = st.secrets["DB_PASS"]
     DB_HOST = st.secrets["DB_HOST"]
     DB_PORT = st.secrets["DB_PORT"]
     DB_NAME = st.secrets["DB_NAME"]
-except Exception:
-    # Mode lokal → pakai manual
-    DB_USER = "postgres"
-    DB_PASS = "SandiSQL05#"
-    DB_HOST = "localhost"
-    DB_PORT = "5432"
-    DB_NAME = "final_pro"
+except Exception as e:
+    st.error("⚠️ Koneksi database belum dikonfigurasi dengan benar. Pastikan secrets.toml sudah terisi.")
+    st.stop()
 
 # Membuat koneksi engine
 engine = create_engine(
